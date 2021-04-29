@@ -1,0 +1,22 @@
+{
+  "name": "criador-de-videos-automatico",
+  "version": "1.0.0",
+  "description": "- Sistema de Criação de video de acordo com o tema atribuidos à aplicação",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Vinicius-Reis-da-Silva/Criador-de-Videos-Automatico.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Vinicius-Reis-da-Silva/Criador-de-Videos-Automatico/issues"
+  },
+  "homepage": "https://github.com/Vinicius-Reis-da-Silva/Criador-de-Videos-Automatico#readme",
+  "dependencies": {
+    "readline-sync": "^1.4.10"
+  }
+}
