@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/Vinicius-Reis-da-Silva/Criador-de-Videos-Automatico/issues"
   },
-  "homepage": "https://github.com/Vinicius-Reis-da-Silva/Criador-de-Videos-Automatico#readme"
+  "homepage": "https://github.com/Vinicius-Reis-da-Silva/Criador-de-Videos-Automatico#readme",
+  "dependencies": {
+    "readline-sync": "^1.4.10"
+  }
 }
