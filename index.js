@@ -1,12 +1,17 @@
-readline = require('readline-sync');
+const readline = require('readline-sync');
+const robots = {
+    text: require('./robots/text.js'), 
+}
 
-function start(){
-    const searchComplete = {}; // Conteúdo p/ pesquisar
+
+async function start(){
+    const content = {}; // Conteúdo p/ pesquisar
 
     // Cria as probriedade com o resultado do conteúdo para se pesquisa 
-    searchComplete.searchTerm = askAndReturnSearchTerm(); // Termo p/ pesquisa
-    searchComplete.prefix = askAndReturnPrefix(); // Prefixo do termo p/ se pequisado
+    content.searchTerm = askAndReturnSearchTerm(); // Termo p/ pesquisa
+    content.prefix = askAndReturnPrefix(); // Prefixo do termo p/ se pequisado
 
+    await robots.text(content);
 
     // Função de termo para à se pesquisado
     function askAndReturnSearchTerm(){
@@ -22,7 +27,7 @@ function start(){
         return selectedPrefixText;
     }
 
-    console.log(searchComplete);
+    console.log(content);
 }
 
 start();
