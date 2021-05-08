@@ -5,7 +5,9 @@ const robots = {
 
 
 async function start(){
-    const content = {}; // Conteúdo p/ pesquisar
+    const content = {
+        maximumSentences: 7
+    }; // Conteúdo p/ pesquisar
 
     // Cria as probriedade com o resultado do conteúdo para se pesquisa 
     content.searchTerm = askAndReturnSearchTerm(); // Termo p/ pesquisa
@@ -27,7 +29,7 @@ async function start(){
         return selectedPrefixText;
     }
 
-    console.log(content);
+    console.log(content.sentences);
 }
 
 start();
