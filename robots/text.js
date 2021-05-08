@@ -2,6 +2,19 @@
  const algorithmiaApiKey = require('../credentials/algorithmia.json').apiKey;
  const sentenceBoundaryDetection = require('sbd');
 
+// Criado uma instancia do Watson IBM
+const watsonApiKey = require('../credentials/watson-nlu.json').apikey; // importa chave da API
+const { IamAuthenticator } = require('ibm-watson/auth'); // Objeto para autentificação da API do Watson UBM
+const NaturalLanguageUnderstandingV1 = require('ibm-watson/natural-language-understanding/v1'); // importa o modulo do Natural Language Understanding
+
+// Chaamada de CallBack do Natural Language Understanding
+const nlu = new NaturalLanguageUnderstandingV1({
+    authenticator: new IamAuthenticator({ apikey: watsonApiKey }),
+    version: '2018-04-05',
+    serviceUrl: 'https://api.us-south.natural-language-understanding.watson.cloud.ibm.com'
+});
+
+
 // FUNÇÃO PRINCIPAL DO ROBO DE TEXTO
 async function robot(content) {
     // pesquisa o conteudo 
@@ -10,7 +23,10 @@ async function robot(content) {
     sanitizeContent(content); 
     // separa o texto em sentenças
     breakContentIntoSenteces(content);
-    
+    // limita o número maximo de sentenças
+    limitMaximumSentences(content);
+    // pegar as palavras chaves de todas a sentençãs
+    await fetchKeywordsOfAllSentences(content);
 }
 
 // Função que pesquisa e retira o conteudo do Wikipedia
@@ -82,6 +98,52 @@ function breakContentIntoSenteces(content) {
     });
     
 }
+
+// Função que pegar as sentencas do array de sentencas da posição 0 até a posição do valor de maximumSentences
+function limitMaximumSentences(content){
+    content.sentences = content.sentences.slice(0, content.maximumSentences);
+}
+
+// Função busca as palavras chaves de cada sentencas do array de sentencas
+async function fetchKeywordsOfAllSentences(content){
+    let mat =  content.sentences;
+    
+    for(const sentence of mat){
+        sentence.keywords = await fetchWatsonAndReturnKeywords(sentence.text);
+    }
+
+    content.sentences = mat;
+    //console.log(JSON.stringify(mat, null,2));
+}
+
+// Função para encontrar as palavras chaves das sentencas
+async function fetchWatsonAndReturnKeywords(sentence){
+    
+    return new Promise( (resolve, reject) => {
+        nlu.analyze({
+                text: sentence, // Buffer or String
+                features: {
+                    keywords: {}
+                }
+            })
+            .then(response => {
+                // Faz a busca na estrutura e retira somente o texto da palavra chave e passa p/ um array todas as palavras chaves
+                const keywords = response.result.keywords.map((keyword) => {
+                    return keyword.text;
+                });
+                
+                // retorna o array de palavras chaves
+                resolve(keywords); 
+                
+            })
+            .catch(err => {
+                reject(err);
+                console.log('error: ', err);
+            });
+            
+    });
+}
+
 
 // exportação da função robot p/ usar em arquivos externos
 module.exports = robot;
