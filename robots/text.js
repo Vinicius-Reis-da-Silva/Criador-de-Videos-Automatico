@@ -3,10 +3,12 @@
  const sentenceBoundaryDetection = require('sbd');
 
 // Criado uma instancia do Watson IBM
-const watsonApiKey = require('../credentials/watson-nlu.json').apikey; // importa chave da API
-const { IamAuthenticator } = require('ibm-watson/auth'); // Objeto para autentificação da API do Watson UBM
-const NaturalLanguageUnderstandingV1 = require('ibm-watson/natural-language-understanding/v1'); // importa o modulo do Natural Language Understanding
-
+// Objeto para autentificação da API do Watson IBM
+const { IamAuthenticator } = require('ibm-watson/auth'); 
+// importa chave da API
+const watsonApiKey = require('../credentials/watson-nlu.json').apikey; 
+ // importa o modulo do Natural Language Understanding
+const NaturalLanguageUnderstandingV1 = require('ibm-watson/natural-language-understanding/v1');
 // Chaamada de CallBack do Natural Language Understanding
 const nlu = new NaturalLanguageUnderstandingV1({
     authenticator: new IamAuthenticator({ apikey: watsonApiKey }),
@@ -15,8 +17,12 @@ const nlu = new NaturalLanguageUnderstandingV1({
 });
 
 
+const state = require('./state.js'); 
+
 // FUNÇÃO PRINCIPAL DO ROBO DE TEXTO
-async function robot(content) {
+async function robot() {
+    const content = state.load(); // carrega os dados
+    
     // pesquisa o conteudo 
     await fetchContentFromWikipedia(content); 
     // Limpa o conteudo a se pesquisado
@@ -27,6 +33,8 @@ async function robot(content) {
     limitMaximumSentences(content);
     // pegar as palavras chaves de todas a sentençãs
     await fetchKeywordsOfAllSentences(content);
+
+    state.save(content); // salva o dados
 }
 
 // Função que pesquisa e retira o conteudo do Wikipedia
